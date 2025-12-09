@@ -1,0 +1,5 @@
+{
+  "name": "ai-visual-lab",
+  "description": "Interactive animations that explain core AI and LLM concepts through intuitive visualizations.",
+  "requestFramePermissions": []
+}
