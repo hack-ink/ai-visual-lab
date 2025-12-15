@@ -95,12 +95,12 @@ const App: React.FC = () => {
             {/* Right Column: Visualization */}
             <div className="lg:col-span-8">
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    {/* Header Text removed from here and integrated into Visualizer for better alignment */}
                     <Visualizer 
                         candidates={MOCK_CANDIDATES}
                         temperature={temperature}
                         topK={topK}
                         topP={topP}
+                        context="The forecast says tomorrow is"
                     />
                 </div>
             </div>

@@ -9,9 +9,10 @@ interface VisualizerProps {
   temperature: number;
   topK: number;
   topP: number;
+  context?: string;
 }
 
-export const Visualizer: React.FC<VisualizerProps> = ({ candidates, temperature, topK, topP }) => {
+export const Visualizer: React.FC<VisualizerProps> = ({ candidates, temperature, topK, topP, context = "The input text is" }) => {
   
   // --- VISUAL CONSTANTS ---
   const CHART_HEIGHT = 100; // Use 100% of the allocated svg space
@@ -104,6 +105,8 @@ export const Visualizer: React.FC<VisualizerProps> = ({ candidates, temperature,
       return acc + Math.exp(item.baseLogit / temperature);
   }, 0);
 
+  const topCandidate = data[0];
+
   return (
     <div className="w-full space-y-6">
       
@@ -111,16 +114,42 @@ export const Visualizer: React.FC<VisualizerProps> = ({ candidates, temperature,
       <div className="bg-gray-900/80 backdrop-blur-md rounded-2xl p-6 shadow-2xl relative">
         
         {/* Header */}
-        <div className="mb-4 border-b border-gray-800 pb-2">
+        <div className="mb-2 border-b border-gray-800 pb-3 flex justify-between items-end">
             <div>
                 <p className="text-sm font-bold uppercase tracking-widest text-gray-400">
-                    Visualizing probability distribution and sampling filters
+                    Next Token Prediction
                 </p>
             </div>
         </div>
 
+        {/* CONTEXT SENTENCE DISPLAY */}
+        <div className="mb-6 p-4 bg-black/40 rounded-xl border border-gray-800 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 shadow-inner">
+             <span className="text-gray-400 font-mono text-lg tracking-tight">{context}</span>
+             <div className="relative group">
+                 <div className="relative inline-block">
+                    <span 
+                        className="font-bold text-lg font-mono border-b-2 border-dashed px-2 pb-0.5 transition-all duration-300"
+                        style={{ 
+                            color: topCandidate.color,
+                            borderColor: topCandidate.color,
+                            textShadow: `0 0 20px ${topCandidate.color}40`
+                        }}
+                    >
+                        {topCandidate.word}
+                    </span>
+                    {/* Blinking Cursor */}
+                    <span className="absolute -right-3 top-1 w-2 h-6 bg-indigo-500 animate-pulse rounded-sm"></span>
+                 </div>
+                 
+                 {/* Hover Label */}
+                 <div className="absolute left-1/2 -translate-x-1/2 -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-[10px] text-white px-2 py-1 rounded whitespace-nowrap border border-gray-700 pointer-events-none">
+                     Highest Probability Candidate
+                 </div>
+             </div>
+        </div>
+
         {/* CHART AREA */}
-        <div className="h-72 relative mt-4 mx-2 select-none group/chart">
+        <div className="h-64 relative mt-2 mx-2 select-none group/chart">
            
            {/* LAYER 1: Bars Container (Bottom Z-Index, but allow hover popup) */}
            <div 
